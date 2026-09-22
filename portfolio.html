@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John Paul Bordeos — Portfolio</title>
+<meta name="description" content="student of essu, ACT graduate">
+
+<!--
+  ============================================================
+  STUDENT PORTFOLIO TEMPLATE — "Card Catalog" edition
+  ============================================================
+  How to use this file:
+  1. Find every [BRACKETED PLACEHOLDER] and replace it with your
+     own text, links, and images.
+  2. Search for "DUPLICATE THIS BLOCK" to see where you can copy
+     a whole section (a project card, a timeline row, a skill
+     group) to add more entries. Project cards number themselves
+     automatically (CARD 01, CARD 02...) — no need to edit that.
+  3. This is one plain HTML file with CSS and a little JS inside
+     it — no build tools needed. Open it in a browser to preview,
+     and upload it as-is to GitHub Pages, Netlify, or any host.
+  4. The colour and font choices live in the ":root" CSS variables
+     near the top of the <style> block — change those values and
+     the whole site restyles itself.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ DESIGN TOKENS — edit these to restyle the whole site ============
+     Concept: a librarian's card catalog after hours — reading-room ink,
+     brass drawer fittings, cream index cards for each piece of work.
+  */
+  :root {
+    --bg: #12161b;           /* reading-room ink — main background */
+    --bg-alt: #1a212a;       /* drawer-front background (spine) */
+    --card: #ece7d8;         /* cream index-card stock */
+    --ink: #e9e4d6;          /* primary text, on dark background */
+    --ink-soft: #8f96a3;     /* secondary text, on dark background */
+    --ink-card: #241f16;     /* primary text, on cream cards */
+    --ink-card-soft: #5b5644;/* secondary text, on cream cards */
+    --brass: #c69a4e;        /* accent — drawer fittings, labels */
+    --brass-bright: #dcb268; /* accent, brighter — links on dark bg */
+    --brass-dim: #8a6d38;    /* accent, muted — rails, borders */
+    --brass-deep: #6b5427;   /* accent, darkest — links on cream cards */
+    --rule: rgba(233, 228, 214, 0.14);   /* hairlines on dark background */
+    --rule-card: rgba(36, 31, 22, 0.16); /* hairlines on cream cards */
+
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Inter", -apple-system, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+    --spine-width: 260px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  body {
+    margin: 0;
+    background: radial-gradient(ellipse 1200px 700px at 10% -10%, #1a212a 0%, var(--bg) 60%);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+  }
+
+  a { color: var(--brass-bright); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+  a:hover { color: #efc98a; }
+  a:focus-visible, button:focus-visible, .tab:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 3px;
+  }
+
+  .skip-link {
+    position: absolute; left: -999px; top: 0;
+    background: var(--brass); color: #12161b;
+    padding: 0.75rem 1.25rem; z-index: 100;
+    font-family: var(--font-mono); font-size: 0.85rem; font-weight: 500;
+  }
+  .skip-link:focus { left: 1rem; top: 1rem; }
+
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.1; margin: 0; }
+  h1 em, h2 em, h3 em { font-style: italic; font-weight: 500; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brass);
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+
+  /* ============ LAYOUT: catalog drawer (left) + reading room (content) ============ */
+  .layout {
+    display: grid;
+    grid-template-columns: var(--spine-width) 1fr;
+    min-height: 100vh;
+  }
+
+  /* --- Signature element: the drawer front with a brass nameplate + tab index --- */
+  .spine {
+    background: linear-gradient(180deg, var(--bg-alt) 0%, #10141a 100%);
+    border-right: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem 0;
+  }
+
+  /* thin brass rail down the far edge, like the metal track a drawer slides on */
+  .rings {
+    position: absolute;
+    left: 10px;
+    top: 24px;
+    bottom: 24px;
+    width: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    pointer-events: none;
+  }
+  .ring {
+    width: 3px; height: 22px;
+    border-radius: 1px;
+    background: var(--brass-dim);
+    border: none;
+    opacity: 0.6;
+  }
+
+  /* the nameplate — a brass-framed card set into the drawer front */
+  .spine-id {
+    position: relative;
+    margin: 0 1.25rem 1.5rem 2.5rem;
+    padding: 1.1rem 1rem 1rem;
+    background: var(--card);
+    border-radius: 3px;
+    box-shadow: 0 2px 0 var(--brass-dim), 0 10px 20px rgba(0, 0, 0, 0.35);
+  }
+  .spine-id::before, .spine-id::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--brass);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.45);
+  }
+  .spine-id::before { left: 7px; }
+  .spine-id::after { right: 7px; }
+
+  /*img frame sizing*/
+  .spine-id .name:first-of-type img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 5%;
+  }
+
+  .spine-id .name:first-of-type {
+    display: block;
+    padding: 0;
+    border: none;
+    margin-bottom: 0.7rem;
+  }
+  
+  .spine-id .name:last-of-type {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ink-card);
+    display: block;
+  }
+  .spine-id .role {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-card-soft);
+    display: block;
+    margin-top: 0.35rem;
+  }
+
+  nav.index { padding-left: 2.5rem; padding-right: 1rem; display: flex; flex-direction: column; gap: 0.2rem; }
+  .tab {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 0.6rem 0.75rem;
+    border-radius: 3px 0 0 3px;
+    display: flex;
+    gap: 0.6rem;
+    border-left: 2px solid transparent;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .tab:hover { background: rgba(198, 154, 78, 0.08); color: var(--ink); border-left-color: var(--brass-dim); }
+  .tab .code { color: var(--brass); }
+
+  .spine-footer {
+    margin-top: auto;
+    padding: 1.5rem 1.5rem 0 2.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.03em;
+  }
+
+  /* --- Mobile: drawer front collapses to a top bar --- */
+  @media (max-width: 780px) {
+    .layout { grid-template-columns: 1fr; }
+    .spine {
+      position: static; height: auto; flex-direction: row;
+      align-items: center; padding: 1rem; overflow-x: auto;
+    }
+    .rings { display: none; }
+    .spine-id { border-right: none; margin: 0 1rem 0 0; flex-shrink: 0; }
+    nav.index { flex-direction: row; padding: 0 0 0 0.5rem; }
+    .spine-footer { display: none; }
+  }
+
+  main { min-width: 0; }
+
+  section {
+    padding: 5rem 4rem;
+    border-bottom: 1px solid var(--rule);
+    max-width: 900px;
+  }
+  @media (max-width: 780px) { section { padding: 3rem 1.5rem; } }
+
+  /* ============ HERO ============ */
+  .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); color: var(--ink); }
+  .hero .tagline {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    max-width: 42ch;
+    margin-top: 1.1rem;
+  }
+  .hero-links {
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    margin-top: 2.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px dotted var(--rule);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .hero-links a { color: var(--ink); border-bottom: 1px solid var(--ink-soft); padding-bottom: 2px; text-decoration: none; }
+  .hero-links a:hover { color: var(--brass-bright); border-color: var(--brass-bright); }
+
+  /* ============ ABOUT ============ */
+  .about p { max-width: 65ch; color: var(--ink-soft); }
+  .about p + p { margin-top: 1rem; }
+
+  /* ============ SKILLS ============ */
+  .skill-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 2rem; }
+  .skill-group h3 { font-size: 0.85rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--brass-bright); margin-bottom: 0.85rem; font-weight: 500; }
+  .skill-group ul { list-style: none; padding: 0; margin: 0; color: var(--ink-soft); }
+  .skill-group li { padding: 0.4rem 0; border-bottom: 1px dotted var(--rule); }
+
+  /* ============ PROJECTS — signature element: index cards ============ */
+  .project-grid { display: grid; gap: 1.75rem; margin-top: 2rem; counter-reset: card; }
+  .project-card {
+    counter-increment: card;
+    position: relative;
+    background: var(--card);
+    color: var(--ink-card);
+    border: 1px solid var(--rule-card);
+    border-radius: 3px;
+    padding: 1.75rem;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1.5rem;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .project-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45); }
+  /* two-hole card punch, top-left */
+  .project-card::before {
+    content: "";
+    position: absolute; top: 14px; left: 14px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: 18px 0 0 var(--bg);
+  }
+  /* auto-numbering call number, top-right — updates itself when you duplicate a card */
+  .project-card::after {
+    content: "CARD " counter(card, decimal-leading-zero);
+    position: absolute; top: 16px; right: 18px;
+    font-family: var(--font-mono); font-size: 0.66rem;
+    letter-spacing: 0.06em; color: var(--brass-deep);
+  }
+  @media (max-width: 640px) { .project-card { grid-template-columns: 1fr; } }
+  .project-card img {
+    width: 100%; height: 100%; min-height: 140px;
+    object-fit: cover; border-radius: 3px;
+    border: 1px solid var(--rule-card);
+  }
+  .project-card h3 { font-size: 1.25rem; margin-bottom: 0.4rem; padding-right: 4.5rem; }
+  .project-card .desc { color: var(--ink-card-soft); font-size: 0.95rem; }
+  .tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.9rem 0; }
+  .tag {
+    font-family: var(--font-mono); font-size: 0.68rem;
+    background: rgba(198, 154, 78, 0.12); color: var(--brass-deep);
+    border: 1px solid rgba(198, 154, 78, 0.3);
+    padding: 0.22rem 0.55rem; border-radius: 3px;
+  }
+  .project-links { font-family: var(--font-mono); font-size: 0.82rem; display: flex; gap: 1.25rem; }
+  .project-card a { color: var(--brass-deep); text-decoration-color: rgba(107, 84, 39, 0.5); }
+  .project-card a:hover { color: var(--brass-dim); }
+
+  /* ============ EXPERIENCE / EDUCATION TIMELINE (circulation record) ============ */
+  .timeline-columns {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  @media (max-width: 640px) { .timeline-columns { grid-template-columns: 1fr; gap: 2.5rem; } }
+  .timeline-column h3.col-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brass-bright);
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+  .timeline { border-left: 2px dotted var(--rule); padding-left: 1.75rem; display: flex; flex-direction: column; gap: 2rem; }
+  .timeline-item { position: relative; }
+  .timeline-item::before {
+    content: ""; position: absolute; left: -2.28rem; top: 0.35rem;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--brass);
+    box-shadow: 0 0 0 3px var(--bg);
+  }
+  .timeline-item .when { font-family: var(--font-mono); font-size: 0.76rem; color: var(--brass-dim); }
+  .timeline-item h3 { font-size: 1.1rem; margin-top: 0.3rem; color: var(--ink); }
+  .timeline-item .where { color: var(--ink-soft); font-size: 0.9rem; margin-bottom: 0.4rem; font-style: italic; font-family: var(--font-display); }
+  .timeline-item p { color: var(--ink-soft); font-size: 0.92rem; max-width: 60ch; }
+
+  /* ============ CONTACT / FOOTER ============ */
+  .contact { border-bottom: none; }
+  .contact p { color: var(--ink-soft); max-width: 50ch; }
+  .contact-methods {
+    margin-top: 1.75rem;
+    max-width: 340px;
+    padding: 1.25rem 1.5rem;
+    border: 1px dashed var(--rule);
+    border-radius: 4px;
+    display: flex; flex-direction: column; gap: 0.7rem;
+    font-family: var(--font-mono); font-size: 0.92rem;
+  }
+  footer.sign-off {
+    padding: 2rem 4rem 3rem;
+    font-family: var(--font-mono); font-size: 0.72rem;
+    color: var(--ink-soft); letter-spacing: 0.02em;
+  }
+  @media (max-width: 780px) { footer.sign-off { padding: 1.5rem; } }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="layout">
+
+  <!-- ============ SPINE / NAVIGATION ============ -->
+  <header class="spine">
+    <div class="rings" aria-hidden="true">
+      <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+      <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+    </div>
+
+    <div class="spine-id">
+      <span class="name"><img src="BSIT Aprl 22, 202603211.jpg" alt=""></span>
+      <span class="name">John Paul V. Bordeos</span>
+      <span class="role">B.S. Information Technology, 2026</span>
+    </div>
+
+    <nav class="index" aria-label="Section navigation">
+      <a class="tab" href="#about"><span class="code">01</span> About</a>
+      <a class="tab" href="#skills"><span class="code">02</span> Skills</a>
+      <a class="tab" href="#projects"><span class="code">03</span> Projects</a>
+      <a class="tab" href="#experience"><span class="code">04</span> Experience</a>
+      <a class="tab" href="#contact"><span class="code">05</span> Contact</a>
+    </nav>
+
+    <div class="spine-footer">
+      Last updated [August 2026]
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <span class="eyebrow">Catalog · Entry 00</span>
+      <h1>JOHN PAUL V. BORDEOS<br><em>Database development | Android App Dev</em>.</h1>
+      <p class="tagline">Studying Bachelor of Science in Information Technology, focuses on developing mobile app and SQL databases, pursuing to be a Database Engineer. </p>
+      <div class="hero-links">
+        <a href="mailto:jp.bordeos17@gmail.com">Email</a>
+        <a href="JOHN PAUL V BORDEOS.pdf">Resume</a>
+        <a href="https://github.com/John2Paul">GitHub</a>
+        <a href="https://www.linkedin.com/in/john-paul-bordeos-865731429/">LinkedIn</a>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about">
+      <span class="eyebrow">Catalog · 01</span>
+      <h2>About</h2>
+      <p>Hello world! My name is John Paul 21 years old, graduate of vocational course Associate in Computer Technology(ACT) currently studying B.S. Information Technology. Experience on mobile app development and physical setup of computer network. </p>
+      <p>I am currently focusing on SQL developing database, with prior experience from my Ayuda App project that uses SQLite which shaped my direction to pursue Database Engineer</p>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section id="skills">
+      <span class="eyebrow">Catalog · 02</span>
+      <h2>Skills</h2>
+      <div class="skill-groups">
+
+        <!-- DUPLICATE THIS BLOCK for each skill category -->
+        <div class="skill-group">
+          <h3>Languages</h3>
+          <ul>
+            <li>Python</li>
+            <li>Java</li>
+            <li>C#</li>
+          </ul>
+        </div>
+
+        <div class="skill-group">
+          <h3>Tools</h3>
+          <ul>
+            <li>Android Studio</li>
+            <li>Visual Studio Code</li>
+            <li>Github</li>
+          </ul>
+        </div>
+
+        <div class="skill-group">
+          <h3>Other</h3>
+          <ul>
+            <li>Ai Prompting</li>
+            <li>Ethernet Cabling</li>
+          </ul>
+        </div>
+        <!-- END DUPLICATE BLOCK -->
+
+      </div>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects">
+      <span class="eyebrow">Catalog · 03</span>
+      <h2>Projects</h2>
+      <div class="project-grid">
+
+        <!-- DUPLICATE THIS BLOCK for each project — the "CARD 0N" number in the
+             corner is generated automatically by CSS, so you don't need to edit it. -->
+        <article class="project-card">
+          <img src="Screenshot 2026-08-14 131416.png" alt="rich foods project">
+          <div>
+            <h3>Rich Foods</h3>
+            <p class="desc">Rich Foods is a practical application designed for individuals who enjoy cooking. Often, it can be challenging to decide what meal to prepare using only a single ingredient available at home and searching for recipes one by one can be time-consuming. Rich Foods simplifies this process by allowing users to search for dishes they can make using just one ingredient. I worked alone building this app as a developer role.</p>
+            <div class="tags">
+              <span class="tag">Android Studio</span>
+              <span class="tag">Java</span>
+            </div>
+            <div class="project-links">
+              <a href="[live demo link]">Live demo</a>
+              <a href="https://github.com/John2Paul/RecipeRecommendationAPP.git">Source</a>
+            </div>
+          </div>
+        </article>
+        <!-- END DUPLICATE BLOCK -->
+
+        <article class="project-card">
+          <img src="Screenshot 2026-08-14 131916.png" alt="[Describe what's shown in the image]">
+          <div>
+            <h3>Directa Ayuda App</h3>
+            <p class="desc">The Directa Ayuda App was developed as a mobile application designed to streamline the student assistance application process. The application provides a digital platform where students can submit their applications, input necessary information, and manage their records using their mobile devices. It includes features such as secure authentication through Google Sign-In, structured digital forms, and local data storage using SQLite.</p>
+            <div class="tags">
+              <span class="tag">Android Studio</span>
+              <span class="tag">Java</span>
+              <span class="tag">SQLite</span>
+            </div>
+            <div class="project-links">
+              <a href="[live demo link]">Live demo</a>
+              <a href="https://github.com/John2Paul/ayuda_app.git">Source</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============ EXPERIENCE / EDUCATION ============ -->
+    <section id="experience">
+      <span class="eyebrow">Catalog · 04</span>
+      <h2>Experience &amp; Education</h2>
+      <div class="timeline-columns">
+
+        <!-- LEFT COLUMN: EXPERIENCE -->
+        <div class="timeline-column">
+          <h3 class="col-title">Experience</h3>
+          <div class="timeline">
+
+            <!-- DUPLICATE THIS BLOCK for each job or internship -->
+            <div class="timeline-item">
+              <span class="when">January 2026 — March 2026</span>
+              <h3>Assistant IT Support and Maintenance</h3>
+              <div class="where">ICTC ESSU-Main</div>
+              <p>Internship at ICTC assisted ethernet cabling and hardware maintenance</p>
+            </div>
+            <!-- END DUPLICATE BLOCK -->
+
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: EDUCATION -->
+        <div class="timeline-column">
+          <h3 class="col-title">Education</h3>
+          <div class="timeline">
+
+            <!-- DUPLICATE THIS BLOCK for each degree or program -->
+            <div class="timeline-item">
+              <span class="when">[January 2024] — [March 2025]</span>
+              <h3>Associate in Computer Technology</h3>
+              <div class="where">Eastern Samar State University(ESSU)</div>
+              <p>Graduate Student of ACT batch 2024</p>
+            </div>
+            <!-- END DUPLICATE BLOCK -->
+
+            <div class="timeline-item">
+              <span class="when">August 28, 2025</span>
+              <h3>CISCO Routing & Switching - IP Telephony Seminar</h3>
+              <div class="where">Rivan IT Cebu</div>
+              <p>Routing and Switching IP Telephony</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="contact" id="contact">
+      <span class="eyebrow">Catalog · 05</span>
+      <h2>Get in touch</h2>
+      <p>Open to summer 2027 internships in Mobile development. Reach out any time</p>
+      <div class="contact-methods">
+        <a href="mailto:jp.bordeos17@gmail.com">jp.bordeos17@gmail.com</a>
+        <a href="https://github.com/John2Paul">github.com/John2Paul</a>
+        <a href="https://www.linkedin.com/in/john-paul-bordeos-865731429/">linkedin.com/in/John Paul Bordeos</a>
+      </div>
+    </section>
+
+    <footer class="sign-off">
+      © [2026] [John Paul Bordeos]. All rights reserved.
+    </footer>
+
+  </main>
+</div>
+
+</body>
+</html>
